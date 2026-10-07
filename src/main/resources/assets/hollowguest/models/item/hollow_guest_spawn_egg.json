@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hollowguest:item/hollow_guest_spawn_egg"
+  }
+}
