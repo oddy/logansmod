@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BreakDoorGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -43,6 +42,7 @@ public class HollowGuest extends Monster {
     public static final int CALM_DOWN_TICKS = 400;
 
     private int calmTicks;
+    private BreakThroughGoal breakThroughGoal;
 
     public HollowGuest(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -75,14 +75,11 @@ public class HollowGuest extends Monster {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new BreakDoorGoal(this, difficulty -> true) {
-            @Override
-            public boolean canUse() {
-                return HollowGuest.this.isNoticed() && super.canUse();
-            }
-        });
+        this.breakThroughGoal = new BreakThroughGoal(this);
+        this.goalSelector.addGoal(1, this.breakThroughGoal);
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.1, false));
         this.goalSelector.addGoal(3, new OpenDoorGoal(this, false));
+        this.goalSelector.addGoal(4, new DirectChaseGoal(this, 1.0));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 24.0F) {
             @Override
             public boolean canUse() {
@@ -123,6 +120,9 @@ public class HollowGuest extends Monster {
             return;
         }
         this.entityData.set(DATA_CLIMBING, this.horizontalCollision);
+        if (this.breakThroughGoal != null) {
+            this.breakThroughGoal.trackProgress();
+        }
 
         if (!this.isNoticed()) {
             if (this.tickCount % 3 == 0) {

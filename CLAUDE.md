@@ -23,7 +23,8 @@
 - Copy the jar into the Prism instance shown as "logans-mod-playtest". On disk that's
   `C:\Users\logan\AppData\Roaming\PrismLauncher\instances\26.2(1)\minecraft\mods`
   (the folder is named `26.2(1)`; the display name lives in `instance.cfg`).
-- Remove the previous `hollowguest-*.jar` from that folder so there's only one copy. The device file tools can't delete; if an old jar is still there, ask Beau to remove it or overwrite by using the same file name.
+- There must only be one Hollow Guest jar in that folder, or NeoForge refuses to start (duplicate mod id). The device file tools can't delete, so always deploy to the same file name and overwrite it: currently `hollowguest-1.0.0.jar` (the name doesn't track the version). If Beau clears the folder, switch to plain `hollowguest.jar` and update this note.
+- To test behavior without a player, give it a target with `damage <guest> 1 minecraft:mob_attack by <villager>` (use a villager with NoAI and lots of health, not Invulnerable — invulnerable targets get dropped).
 - Logan launches it from Prism himself.
 
 ## Blockbench
